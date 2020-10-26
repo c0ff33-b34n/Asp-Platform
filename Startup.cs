@@ -45,11 +45,21 @@ namespace Platform
             });
 
             app.Use(async (context, next) => {
-                if (context.Request.Method == HttpMethods.Get&& context.Request.Query["custom"] == "true")
+                if (context.Request.Method == HttpMethods.Get && context.Request.Query["custom"] == "true")
                 {
                     await context.Response.WriteAsync("Custom Middleware \n");
                 }
                 await next();
+            });
+
+            app.Map("/branch", branch =>
+            {
+                branch.UseMiddleware<QueryStringMiddleware>();
+                
+                branch.Use(async (context, next) =>
+                {
+                    await context.Response.WriteAsync($"Branch Middleware");
+                });
             });
 
             app.UseMiddleware<QueryStringMiddleware>();
