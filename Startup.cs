@@ -20,9 +20,21 @@ namespace Platform
             app.UseDeveloperExceptionPage();
             app.UseMiddleware<Population>();
             app.UseMiddleware<Capital>();
-            app.Use(async (context, next) => {
-                await context.Response.WriteAsync("Terminal Middleware Reached");
+            
+            app.UseRouting();
+            
+            app.UseEndpoints(endpoints => {
+                endpoints.MapGet("routing", async context =>
+                {
+                    await context.Response.WriteAsync("Request Was Routed");
+                });
             });
+
+            app.Use(async (context, next) =>
+                {
+                    await context.Response.WriteAsync("Terminal Middleware Reached");
+                }
+            );
         }
     }
 }
