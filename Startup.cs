@@ -26,6 +26,16 @@ namespace Platform
                 app.UseDeveloperExceptionPage();
             }
 
+            app.Map("/branch", branch =>
+            {
+                branch.UseMiddleware<QueryStringMiddleware>();
+                
+                branch.Use(async (context, next) =>
+                {
+                    await context.Response.WriteAsync($"Branch Middleware");
+                });
+            });
+
             app.Use(async (context, next) => 
             {
                 await next();
@@ -50,16 +60,6 @@ namespace Platform
                     await context.Response.WriteAsync("Custom Middleware \n");
                 }
                 await next();
-            });
-
-            app.Map("/branch", branch =>
-            {
-                branch.UseMiddleware<QueryStringMiddleware>();
-                
-                branch.Use(async (context, next) =>
-                {
-                    await context.Response.WriteAsync($"Branch Middleware");
-                });
             });
 
             app.UseMiddleware<QueryStringMiddleware>();
