@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Platform.Services;
@@ -10,13 +9,12 @@ namespace Platform
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services) {
-            services.Configure<RouteOptions>(opts =>
-            {
-                opts.ConstraintMap.Add("countryName",typeof(CountryRouteConstraint));
-            });
+            services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            IResponseFormatter formatter) {
+            
             app.UseDeveloperExceptionPage();
             
             app.UseRouting();
@@ -25,7 +23,7 @@ namespace Platform
 
             app.Use(async (context, next) => {
                 if (context.Request.Path == "/middleware/function") {
-                    await TypeBroker.Formatter.Format(context,
+                    await formatter.Format(context,
                         "Middleware Function: It is snowing in Chicago");
                 } else {
                     await next();
@@ -37,7 +35,7 @@ namespace Platform
                 endpoints.MapGet("/endpoint/class", WeatherEndpoint.Endpoint);
 
                 endpoints.MapGet("/endpoint/function", async context => {
-                    await TypeBroker.Formatter.Format(context,
+                    await formatter.Format(context,
                         "Endpoint Function: It is sunny in LA");
                 });
             });
