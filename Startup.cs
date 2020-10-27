@@ -18,8 +18,8 @@ namespace Platform
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             app.UseDeveloperExceptionPage();
-            app.UseMiddleware<Population>();
-            app.UseMiddleware<Capital>();
+            // app.UseMiddleware<Population>();
+            // app.UseMiddleware<Capital>();
             
             app.UseRouting();
             
@@ -28,6 +28,8 @@ namespace Platform
                 {
                     await context.Response.WriteAsync("Request Was Routed");
                 });
+                endpoints.MapGet("capital/uk", new Capital().Invoke);
+                endpoints.MapGet("population/paris", new Population().Invoke);
             });
 
             app.Use(async (context, next) =>
