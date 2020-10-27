@@ -15,6 +15,10 @@ namespace Platform
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services) {
+            services.Configure<RouteOptions>(opts =>
+            {
+                opts.ConstraintMap.Add("countryName",typeof(CountryRouteConstraint));
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -34,7 +38,8 @@ namespace Platform
                     }
                 });
 
-                endpoints.MapGet("capital/{country:regex(^uk|france|monaco$)}",Capital.Endpoint);
+                endpoints.MapGet("capital/{country:countryName}", Capital.Endpoint);
+                
                 endpoints.MapGet("size/{city?}", Population.Endpoint)
                     .WithMetadata(new RouteNameMetadata("population"));
                 
