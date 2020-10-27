@@ -8,10 +8,10 @@ namespace Platform
     {
         public static async Task Endpoint(HttpContext context)
         {
-            string city = context.Request.RouteValues["city"] as string;
+            string city = context.Request.RouteValues["city"] as string ?? "london";
             int? pop = null;
 
-            switch ((city ?? "").ToLower())
+            switch (city.ToLower())
             {
                 case "london":
                     pop = 8_136_000;
