@@ -27,6 +27,20 @@ namespace Platform
             // app.UseMiddleware<Capital>();
             
             app.UseRouting();
+
+            app.Use(async (context, next) =>
+            {
+                Endpoint end = context.GetEndpoint();
+                if (end != null)
+                {
+                    await context.Response.WriteAsync($"{end.DisplayName} Selected \n");
+                }
+                else
+                {
+                    await context.Response.WriteAsync("No Endpoint Selected \n");
+                }
+                await next();
+            });
             
             app.UseEndpoints(endpoints => {
                 endpoints.Map("{number:int}", async context => {
