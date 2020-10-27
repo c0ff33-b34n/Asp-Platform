@@ -29,24 +29,18 @@ namespace Platform
             app.UseRouting();
             
             app.UseEndpoints(endpoints => {
-                endpoints.MapGet("{first:alpha:length(3)}/{second:bool}", async context =>
-                {
-                    await context.Response.WriteAsync("Request Was Routed\n");
-                    foreach (var kvp in context.Request.RouteValues)
-                    {
-                        await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
-                    }
-                });
+                endpoints.Map("{number:int}", async context => {
+                    await context.Response.WriteAsync("Routed to the int endpoint");
+                })
+                .WithDisplayName("Int Endpoint")
+                .Add(b => ((RouteEndpointBuilder)b).Order = 1);
 
-                endpoints.MapGet("capital/{country:countryName}", Capital.Endpoint);
-                
-                endpoints.MapGet("size/{city?}", Population.Endpoint)
-                    .WithMetadata(new RouteNameMetadata("population"));
-                
-                endpoints.MapFallback(async context =>
-                {
-                    await context.Response.WriteAsync("Routed to fallback endpoint");
-                });
+                endpoints.Map("{number:double}", async context => {
+                    await context.Response
+                        .WriteAsync("Routed to the double endpoint");
+                })
+                .WithDisplayName("Double Endpoint")
+                .Add(b => ((RouteEndpointBuilder)b).Order = 2);
             });
 
             app.Use(async (context, next) =>
