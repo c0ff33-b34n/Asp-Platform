@@ -35,7 +35,7 @@ namespace Platform
                 });
 
                 endpoints.MapGet("capital/{country}", Capital.Endpoint);
-                endpoints.MapGet("population/{city}", Population.Endpoint)
+                endpoints.MapGet("size/{city}", Population.Endpoint)
                     .WithMetadata(new RouteNameMetadata("population"));
             });
 
