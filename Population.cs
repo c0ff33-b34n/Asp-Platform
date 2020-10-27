@@ -6,45 +6,30 @@ namespace Platform
 {
     public class Population
     {
-        private RequestDelegate next;
-
-        public Population() { }
-        
-        public Population(RequestDelegate nextDelegate)
+        public static async Task Endpoint(HttpContext context)
         {
-            next = nextDelegate;
-        }
+            string city = context.Request.RouteValues["city"] as string;
+            int? pop = null;
 
-        public async Task Invoke(HttpContext context)
-        {
-            string[] parts = context.Request.Path.ToString().Split("/",
-                StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 2 && parts[0] == "population")
+            switch ((city ?? "").ToLower())
             {
-                string city = parts[1];
-                int? pop = null;
-                switch (city.ToLower())
-                {
-                    case "london":
-                        pop = 8_136_000;
-                        break;
-                    case "paris":
-                        pop = 2_141_000;
-                        break;
-                    case "monaco":
-                        pop = 39_000;
-                        break;
-                }
-                if (pop.HasValue)
-                {
-                    await context.Response.WriteAsync($"City: {city}, Population: {pop}");
-                    return;
-                }
+                case "london":
+                    pop = 8_136_000;
+                    break;
+                case "paris":
+                    pop = 2_141_000;
+                    break;
+                case "monaco":
+                    pop = 39_000;
+                    break;
             }
-
-            if (next != null)
+            if (pop.HasValue)
             {
-                await next(context);
+                await context.Response.WriteAsync($"City: {city}, Population: {pop}");
+            }
+            else
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
             }
         }
     }

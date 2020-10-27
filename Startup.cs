@@ -32,9 +32,9 @@ namespace Platform
                         await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
                     }
                 });
-                
-                endpoints.MapGet("capital/uk", new Capital().Invoke);
-                endpoints.MapGet("population/paris", new Population().Invoke);
+
+                endpoints.MapGet("capital/{country}", Capital.Endpoint);
+                endpoints.MapGet("population/{city}", Population.Endpoint);
             });
 
             app.Use(async (context, next) =>
