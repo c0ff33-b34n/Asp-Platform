@@ -37,6 +37,11 @@ namespace Platform
                 endpoints.MapGet("capital/{country:regex(^uk|france|monaco$)}",Capital.Endpoint);
                 endpoints.MapGet("size/{city?}", Population.Endpoint)
                     .WithMetadata(new RouteNameMetadata("population"));
+                
+                endpoints.MapFallback(async context =>
+                {
+                    await context.Response.WriteAsync("Routed to fallback endpoint");
+                });
             });
 
             app.Use(async (context, next) =>
