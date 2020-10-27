@@ -4,9 +4,16 @@ using Platform.Services;
 using System.Threading.Tasks;
 
 namespace Platform {
-    public class WeatherEndpoint {
+    public class WeatherEndpoint
+    {
+        private IResponseFormatter formatter;
+        
+        public WeatherEndpoint(IResponseFormatter responseFormatter)
+        {
+            formatter = responseFormatter;
+        }
 
-        public static async Task Endpoint(HttpContext context, IResponseFormatter formatter)
+        public async Task Endpoint(HttpContext context)
         {
             await formatter.Format(context, "Endpoint Class: It is cloudy in Milan");
         }
