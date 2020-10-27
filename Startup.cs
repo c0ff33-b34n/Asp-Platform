@@ -25,7 +25,7 @@ namespace Platform
             app.UseRouting();
             
             app.UseEndpoints(endpoints => {
-                endpoints.MapGet("{first:int}/{second:bool}", async context =>
+                endpoints.MapGet("{first:alpha:length(3)}/{second:bool}", async context =>
                 {
                     await context.Response.WriteAsync("Request Was Routed\n");
                     foreach (var kvp in context.Request.RouteValues)
