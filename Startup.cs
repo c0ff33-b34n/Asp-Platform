@@ -9,7 +9,7 @@ namespace Platform
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services) {
-            services.AddTransient<IResponseFormatter, GuidService>();
+            services.AddScoped<IResponseFormatter, GuidService>();
         }
 
         public void Configure(IApplicationBuilder app, IResponseFormatter formatter)
