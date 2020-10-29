@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using static Platform.QueryStringMiddleware;
 
 namespace Platform
@@ -22,7 +23,8 @@ namespace Platform
             services.Configure<MessageOptions>(Configuration.GetSection("Location"));
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            ILogger<Startup> logger)
         {
             
             app.UseDeveloperExceptionPage();
@@ -31,23 +33,14 @@ namespace Platform
 
             app.UseMiddleware<LocationMiddleware>();
 
-            app.Use(async (context, next) => 
-            {
-                string defaultDebug = Configuration["Logging:LogLevel:Default"];
-                await context.Response.WriteAsync($"The config setting is: {defaultDebug}");
-                string environ = Configuration["ASPNETCORE_ENVIRONMENT"];
-                await context.Response.WriteAsync($"\nThe env setting is: {environ}");
-                string wsID = Configuration["WebService:Id"];
-                string wsKey = Configuration["WebService:Key"];
-                await context.Response.WriteAsync($"\nThe secret ID is: {wsID}");
-                await context.Response.WriteAsync($"\nThe secret Key is: {wsKey}");
-            });
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
                 {
+                    logger.LogDebug("Response for / started");
                     await context.Response.WriteAsync("Hello World!");
+                    logger.LogDebug("Response for / completed");
                 });
             });
         }
