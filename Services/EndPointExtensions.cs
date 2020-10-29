@@ -23,7 +23,7 @@ namespace Microsoft.AspNetCore.Builder
             app.MapGet(path, context => (Task)methodInfo.Invoke(endpointInstance,
                 methodParams.Select(p => p.ParameterType == typeof(HttpContext)
                 ? context
-                : app.ServiceProvider.GetService(p.ParameterType)).ToArray()));
+                : context.RequestServices.GetService(p.ParameterType)).ToArray()));
         }
     }
 }
