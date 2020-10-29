@@ -19,6 +19,7 @@ namespace Platform
         {
             
             app.UseDeveloperExceptionPage();
+            app.UseCookiePolicy();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
