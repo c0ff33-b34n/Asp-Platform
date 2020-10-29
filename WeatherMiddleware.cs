@@ -7,9 +7,10 @@ namespace Platform {
         private RequestDelegate next;
         private IResponseFormatter formatter;
         
-        public WeatherMiddleware(RequestDelegate nextDelegate,IResponseFormatter respFormatter) 
+        public WeatherMiddleware(RequestDelegate nextDelegate, IResponseFormatter respFormatter) 
         {
             next = nextDelegate;
+            formatter = respFormatter;
         }
 
         public async Task Invoke(HttpContext context) {
