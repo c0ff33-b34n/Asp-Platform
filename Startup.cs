@@ -12,8 +12,8 @@ namespace Platform
             services.AddTransient<IResponseFormatter, GuidService>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            IResponseFormatter formatter) {
+        public void Configure(IApplicationBuilder app, IResponseFormatter formatter)
+        {
             
             app.UseDeveloperExceptionPage();
             
@@ -23,6 +23,8 @@ namespace Platform
 
             app.Use(async (context, next) => {
                 if (context.Request.Path == "/middleware/function") {
+                    IResponseFormatter formatter
+                        = app.ApplicationServices.GetService<IResponseFormatter>();
                     await formatter.Format(context,
                         "Middleware Function: It is snowing in Chicago");
                 } else {
@@ -35,6 +37,8 @@ namespace Platform
                 endpoints.MapEndpoint<WeatherEndpoint>("/endpoint/class");
 
                 endpoints.MapGet("/endpoint/function", async context => {
+                    IResponseFormatter formatter
+                        = app.ApplicationServices.GetService<IResponseFormatter>();
                     await formatter.Format(context,
                         "Endpoint Function: It is sunny in LA");
                 });
