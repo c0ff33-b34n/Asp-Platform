@@ -10,11 +10,18 @@ namespace Platform
     public class Startup
     {
 
-        public void ConfigureServices(IServiceCollection services) {
-
+        public Startup(IConfiguration configService)
+        {
+            Configuration = configService;
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration config)
+        private IConfiguration Configuration { get; set; }
+
+        public void ConfigureServices(IServiceCollection services) {
+            // configuration data can be accessed here.
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             
             app.UseDeveloperExceptionPage();
@@ -23,7 +30,7 @@ namespace Platform
 
             app.Use(async (context, next) => 
             {
-                string defaultDebug = config["Logging:LogLevel:Default"];
+                string defaultDebug = Configuration["Logging:LogLevel:Default"];
                 await context.Response.WriteAsync($"The config setting is: {defaultDebug}");
             });
 
