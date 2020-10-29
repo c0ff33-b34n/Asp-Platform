@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using static Platform.QueryStringMiddleware;
 
 namespace Platform
 {
@@ -18,7 +19,7 @@ namespace Platform
         private IConfiguration Configuration { get; set; }
 
         public void ConfigureServices(IServiceCollection services) {
-            // configuration data can be accessed here.
+            services.Configure<MessageOptions>(Configuration.GetSection("Location"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -27,6 +28,8 @@ namespace Platform
             app.UseDeveloperExceptionPage();
             
             app.UseRouting();
+
+            app.UseMiddleware<LocationMiddleware>();
 
             app.Use(async (context, next) => 
             {
