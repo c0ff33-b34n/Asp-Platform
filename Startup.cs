@@ -35,6 +35,8 @@ namespace Platform
             {
                 string defaultDebug = Configuration["Logging:LogLevel:Default"];
                 await context.Response.WriteAsync($"The config setting is: {defaultDebug}");
+                string environ = Configuration["ASPNETCORE_ENVIRONMENT"];
+                await context.Response.WriteAsync($"\nThe env setting is: {environ}");
             });
 
             app.UseEndpoints(endpoints =>
