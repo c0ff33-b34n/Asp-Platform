@@ -32,6 +32,12 @@ namespace Platform
             app.UseSession();
             app.UseRouting();
 
+            app.Use(async (context, next) => 
+            {
+                await context.Response.WriteAsync($"HTTPS Request: {context.Request.IsHttps} \n");
+                await next();
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/cookie", async context =>
