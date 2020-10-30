@@ -40,11 +40,12 @@ namespace Platform
             }
             else
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error.html");
             }
 
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
+            app.UseStaticFiles();
             app.UseMiddleware<ConsentMiddleware>();
             app.UseSession();
             
