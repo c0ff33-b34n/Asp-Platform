@@ -13,6 +13,14 @@ namespace Platform
             {
                 opts.CheckConsentNeeded = context => true;
             });
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.IsEssential = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app)
@@ -21,6 +29,7 @@ namespace Platform
             app.UseDeveloperExceptionPage();
             app.UseCookiePolicy();
             app.UseMiddleware<ConsentMiddleware>();
+            app.UseSession();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
