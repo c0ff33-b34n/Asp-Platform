@@ -27,6 +27,7 @@ namespace Platform
         {
             
             app.UseDeveloperExceptionPage();
+            app.UseHttpsRedirection();
             app.UseCookiePolicy();
             app.UseMiddleware<ConsentMiddleware>();
             app.UseSession();
