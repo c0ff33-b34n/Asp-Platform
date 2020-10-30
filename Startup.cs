@@ -1,8 +1,4 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HostFiltering;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +16,11 @@ namespace Platform
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapEndpoint<SumEndpoint>("/sum/{count:int=1000000000}");
+                
                 endpoints.MapGet("/", async context =>
                 {
+
                     await context.Response.WriteAsync("Hello world!");
                 });
             });
