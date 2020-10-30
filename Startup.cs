@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,10 +45,24 @@ namespace Platform
             }
 
             app.UseHttpsRedirection();
+            app.UseStatusCodePages("text/html", Responses.DefaultResponse);
             app.UseCookiePolicy();
             app.UseStaticFiles();
             app.UseMiddleware<ConsentMiddleware>();
             app.UseSession();
+
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/error")
+                {
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    await Task.CompletedTask;
+                }
+                else
+                {
+                    await next();
+                }
+            });
             
             app.Run(context =>
             {
